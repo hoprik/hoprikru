@@ -1,4 +1,5 @@
 import * as Collisons from './collisions.js'
+import * as TWEEN from 'tween'
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -7,6 +8,7 @@ let canJump = false;
 let speed = 400.0;
 let prevTime = performance.now();
 let velocityM;
+let walkType = false;
 
 const onKeyDown = function ( event ) {
 
@@ -33,7 +35,7 @@ const onKeyDown = function ( event ) {
             break;
 
         case 'Space':
-            if ( canJump === true ) velocityM.y += 350;
+            if ( canJump === true ) velocityM.y += 50;
             canJump = false;
             break;
         case 'ShiftLeft':
@@ -76,11 +78,12 @@ const onKeyUp = function ( event ) {
 
 
 export class Movement{
-    constructor (document, velocity, direction, controls){
+    constructor (document, velocity, direction, controls, camera){
         velocityM = velocity;
         this.velocity = velocity;
         this.direction = direction;
         this.controls = controls;
+        this.camera = camera;
         document.addEventListener( 'keydown', onKeyDown );
         document.addEventListener( 'keyup', onKeyUp );
     }
@@ -93,13 +96,13 @@ export class Movement{
 		this.velocity.x -= this.velocity.x * 10.0 * delta;
 		this.velocity.z -= this.velocity.z * 10.0 * delta;
 
-		this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+		this.velocity.y -= 9.8 * 40.0 * delta; // 100.0 = mass
 
 		this.direction.z = Number( moveForward ) - Number( moveBackward );
 		this.direction.x = Number( moveRight ) - Number( moveLeft );
 		this.direction.normalize(); // this ensures consistent movements in all directions
-
-		if ( moveForward || moveBackward ) this.velocity.z -= this.direction.z * speed * delta; 
+    
+		if ( moveForward || moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
 		if ( moveLeft || moveRight ) this.velocity.x -= this.direction.x * speed * delta;
 
 		if ( Collisons.onObject === true ) {
@@ -108,9 +111,21 @@ export class Movement{
 			canJump = true;
 
 		}
-
 		this.controls.moveRight( - this.velocity.x * delta );
 		this.controls.moveForward( - this.velocity.z * delta );
+
+        if (this.controls.getObject().position.x > 1000){
+            this.block(1)
+        }
+        if (this.controls.getObject().position.z < -1000){
+            this.block(2)
+        }
+        if (this.controls.getObject().position.z < -1000){
+            this.block(3)
+        }
+        if (this.controls.getObject().position.z > 1000){
+            this.block(4)
+        }
 
 		this.controls.getObject().position.y += ( this.velocity.y * delta ); // new behavior
 
@@ -124,7 +139,18 @@ export class Movement{
 		}
         prevTime = time;
 	}
-    block(){
-
+    block(id){
+        if (id == 1){
+            moveForward = false;
+        }
+        if (id == 2){
+            moveRight = false;
+        }
+        if (id == 3){
+            moveBackward = false;
+        }
+        if (id == 4){
+            moveLeft = false;
+        }
     }
 }

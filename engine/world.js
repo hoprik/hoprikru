@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Sky } from 'three/addons/objects/Sky.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export let objects = []
 
@@ -45,6 +46,33 @@ export function skyInit(scene){
 }
 
 export function init(scene, vertex, color){
+
+	const HemisphereLight = new THREE.HemisphereLight( 0xeeeeff, 0x777788,0.4 );
+	HemisphereLight.position.set( 0.5, 1, 0.75 );
+	scene.add( HemisphereLight );
+
+    let light = new THREE.DirectionalLight(0xffffff, 2);
+    light.position.set(250, 250, 0);
+    light.target.position.set(300, 400, 200);    
+	light.castShadow = true; // default false
+	scene.add( light );
+	
+	//Set up shadow properties for the light
+	light.shadow.mapSize.width = 512; // default
+	light.shadow.mapSize.height = 512; // default
+	light.shadow.camera.near = 0.5; // default
+	light.shadow.camera.far = 500; // default
+	light.shadow.camera.left = 500;
+	light.shadow.camera.top = 500;
+	light.shadow.camera.right = -500;
+	light.shadow.camera.bottom = -500;
+
+	
+    // var helper = new THREE.CameraHelper( light.shadow.camera );
+    // scene.add(helper);
+
+
+
     let floorGeometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
 	floorGeometry.rotateX( - Math.PI / 2 );
 
@@ -80,6 +108,8 @@ export function init(scene, vertex, color){
 
 	const floorMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
 	const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+	floor.castShadow = false;
+	floor.receiveShadow = true;
 	scene.add( floor );
 
 	// objects
@@ -107,20 +137,34 @@ export function init(scene, vertex, color){
 		box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
 		box.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
 		box.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+		box.castShadow = true;
+		box.receiveShadow = true;
+		console.log(box);
 
 		scene.add( box );
 		objects.push( box );
 
 	}
 
-    let light = new THREE.DirectionalLight(0xffffff, 2);
-    light.position.set(50, 50, 0);
-    light.target.position.set(300, 400, 200);    
+	const loader = new GLTFLoader();
 
-    scene.add(light)
+	loader.load( './assets/models/room.glb', function ( gltf ) {
+		console.log(gltf);
+		gltf.scene.position.y = 2
+		gltf.scene.position.x = 50
+		gltf.scene.scale.x = 7;
+		gltf.scene.scale.y = 7;
+		gltf.scene.scale.z = 7;
+		scene.add( gltf.scene );
+		objects.push(gltf.scene.children[0])
 
-    var helper = new THREE.CameraHelper( light.shadow.camera );
-    scene.add(helper);
+	}, undefined, function ( error ) {
+
+		console.error( error );
+
+	} );
+
+
 
     
 	// const light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 2.5 );
