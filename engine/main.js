@@ -5,10 +5,20 @@ import * as HoprikMath from './math.js'
 import * as World from './world.js'
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import * as TWEEN from 'https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ScreenShake } from './ShakeScreen.js';
+
+
+export let shake = ScreenShake();
 
 const info = document.querySelector(".info")
 
-let camera, scene, renderer, controls, collision;
+let camera, scene, renderer, controls, collision, composer;
+
 
 export let movement
 
@@ -40,6 +50,7 @@ const color = new THREE.Color();
 
 init();
 render();
+
 
 function init() {
 
@@ -91,23 +102,21 @@ function init() {
 	World.init(scene, vertex, color)
 	World.skyInit(scene)
 
+	composer = new EffectComposer(renderer);
+
+	const renderPass = new RenderPass( scene, camera );
+	composer.addPass( renderPass );
+	
+	const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 0.2, 0.4, 0.85 );
+	composer.addPass( bloomPass );
+	
+	const outputPass = new OutputPass();
+	composer.addPass( outputPass );
 	window.addEventListener( 'resize', onWindowResize );
-
 }
 
-function shakeObject(object) {
-    // Создаем новый объект Tween для анимации тряски
-    let tween = new TWEEN.Tween(object.position)
-        .to({ x: object.position.x + 0.1, y: object.position.y + 0.1, z: object.position.z }, 100)
-        .repeat(5) // Количество повторений для эффекта тряски
-        .yoyo(true) // Возвращает объект в исходное положение после каждого повторения
-        .onComplete(function () {
-            // Здесь можно выполнить дополнительные действия после окончания анимации
-        })
-        .start(); // Запускаем анимацию
-}
 
-shakeObject(camera);
+// shakeObject(camera);
 
 function onWindowResize() {
 
@@ -118,14 +127,18 @@ function onWindowResize() {
 }
 
 function logger(){
-	info.innerHTML = "xyz "+Math.round(controls.getObject().position.x)+" "+Math.round(controls.getObject().position.y)+" "+Math.round(controls.getObject().position.z)+" direction "+HoprikMath.getDirection(camera.getWorldDirection(new THREE.Vector3())).name+" fps " +Math.round(fps)
+	info.innerHTML = "xyz "+Math.round(controls.getObject().position.x)+" "+Math.round(controls.getObject().position.y)+" "+Math.round(controls.getObject().position.z)+" direction "+HoprikMath.getDirection(camera.getWorldDirection(new THREE.Vector3())).name+" fps "
 }
 
+
+
+
+
 function render() {
-
+	composer.render()
 	logger()
-
-	requestAnimFrame()
+    shake.update(camera)
+	//requestAnimFrame()
 
 	requestAnimationFrame( render );
 
@@ -133,5 +146,8 @@ function render() {
 		collision.collisonDetector()
 		movement.move()
 	}
-	renderer.render( scene, camera );
+
+
+
 }   
+

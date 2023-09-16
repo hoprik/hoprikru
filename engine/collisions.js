@@ -3,27 +3,20 @@ import * as World from './world.js'
 import * as THREE from 'three'
 import { movement } from './main.js';
 
+
 function genRays(numRays){
 	const rayDirections = [];
 
 	// Генерация направлений лучей
 	for (let i = 0; i < numRays; i++) {
 		const angle = (i / numRays) * Math.PI * 2; 
-		const directionM = new THREE.Vector3(Math.cos(angle), -45, Math.sin(angle)); // Создание вектора направления
-		rayDirections.push(directionM); 
 		const directionN = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle)); // Создание вектора направления
 		rayDirections.push(directionN); 
-		const directionB = new THREE.Vector3(Math.cos(angle), 45, Math.sin(angle)); // Создание вектора направления
-		rayDirections.push(directionB); 
 	}
 	return rayDirections;
 }
 
 export let onObject = 0;
-
-function onCollide(){
-    
-}
 
 
 export class Collisons{
@@ -44,7 +37,7 @@ export class Collisons{
 
 		this.raycast.ray.origin.copy(this.controll.getObject().position);
 
-		const rayDistance = 7;
+		const rayDistance = 6;
 
 		for (const direction of genRays(20)) {
 			this.raycast.ray.direction.copy(direction);

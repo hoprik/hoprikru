@@ -1,5 +1,7 @@
 import * as Collisons from './collisions.js'
+import * as THREE from 'three';
 import * as TWEEN from 'tween'
+import { shake } from './main.js';
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -105,6 +107,7 @@ export class Movement{
 		if ( moveForward || moveBackward ) this.velocity.z -= this.direction.z * speed * delta;
 		if ( moveLeft || moveRight ) this.velocity.x -= this.direction.x * speed * delta;
 
+
 		if ( Collisons.onObject === true ) {
 
 			this.velocity.y = Math.max( 0, this.velocity.y );
@@ -152,5 +155,9 @@ export class Movement{
         if (id == 4){
             moveLeft = false;
         }
+    }
+
+    isDontMove(){
+        if (!moveForward) if (!moveRight) if (!moveBackward) if (!moveLeft) return false;
     }
 }

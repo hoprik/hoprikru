@@ -128,33 +128,48 @@ export function init(scene, vertex, color){
 
 	boxGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsBox, 3 ) );
 
-	for ( let i = 0; i < 500; i ++ ) {
+	// for ( let i = 0; i < 500; i ++ ) {
 
-		const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
-		boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+	// 	const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
+	// 	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
 
-		const box = new THREE.Mesh( boxGeometry, boxMaterial );
-		box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-		box.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-		box.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-		box.castShadow = true;
-		box.receiveShadow = true;
-		console.log(box);
+	// 	const box = new THREE.Mesh( boxGeometry, boxMaterial );
+	// 	box.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
+	// 	box.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
+	// 	box.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
+	// 	box.castShadow = true;
+	// 	box.receiveShadow = true;
+	// 	console.log(box);
 
-		scene.add( box );
-		objects.push( box );
+	// 	scene.add( box );
+	// 	objects.push( box );
 
-	}
+	// }
 
 	const loader = new GLTFLoader();
 
 	loader.load( './assets/models/room.glb', function ( gltf ) {
-		console.log(gltf);
-		gltf.scene.position.y = 2
+		gltf.scene.position.y = 1.1
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 7;
 		gltf.scene.scale.y = 7;
 		gltf.scene.scale.z = 7;
+		scene.add( gltf.scene );
+		//objects.push(gltf.scene.children[0])
+
+	}, undefined, function ( error ) {
+
+		console.error( error );
+
+	});
+	loader.load( './assets/models/roomHitbox.glb', function ( gltf ) {
+		gltf.scene.position.x = 50
+		gltf.scene.scale.x = 7;
+		gltf.scene.scale.y = 7;
+		gltf.scene.scale.z = 7;
+		gltf.scene.visible = false;
+		gltf.scene.castShadow = true;
+		gltf.scene.receiveShadow = true;
 		scene.add( gltf.scene );
 		objects.push(gltf.scene.children[0])
 
@@ -162,7 +177,7 @@ export function init(scene, vertex, color){
 
 		console.error( error );
 
-	} );
+	});
 
 
 
