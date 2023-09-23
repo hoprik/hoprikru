@@ -148,13 +148,15 @@ export function init(scene, vertex, color){
 
 	const loader = new GLTFLoader();
 
-	loader.load( './assets/models/room.glb', function ( gltf ) {
+	loader.load( './assets/models/myroom.glb', function ( gltf ) {
 		gltf.scene.position.y = 1.1
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 7;
 		gltf.scene.scale.y = 7;
 		gltf.scene.scale.z = 7;
 		scene.add( gltf.scene );
+		gltf.scene.children[0].castShadow = true;
+		gltf.scene.children[0].receiveShadow = true;
 		//objects.push(gltf.scene.children[0])
 
 	}, undefined, function ( error ) {
@@ -162,7 +164,7 @@ export function init(scene, vertex, color){
 		console.error( error );
 
 	});
-	loader.load( './assets/models/roomHitbox.glb', function ( gltf ) {
+	loader.load( './assets/models/myroomHitbox.glb', function ( gltf ) {
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 7;
 		gltf.scene.scale.y = 7;
