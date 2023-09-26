@@ -154,6 +154,8 @@ export function init(scene, vertex, color){
 		gltf.scene.scale.x = 7;
 		gltf.scene.scale.y = 7;
 		gltf.scene.scale.z = 7;
+		gltf.scene.children[0].castShadow = true;
+		gltf.scene.children[0].receiveShadow = true;
 		scene.add( gltf.scene );
 		gltf.scene.children[0].castShadow = true;
 		gltf.scene.children[0].receiveShadow = true;

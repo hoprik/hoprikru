@@ -9,7 +9,6 @@ export const DIRECTIONS = {
 export function getDirection(direction){
 	const angle = Math.atan2(direction.x, direction.z);
 
-
 	// Определяем направление на основе угла
 	let directionReturn = {}
 	
