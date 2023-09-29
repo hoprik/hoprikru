@@ -10,7 +10,6 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { ScreenShake } from './ShakeScreen.js';
 
 
 export let shake = ScreenShake();
