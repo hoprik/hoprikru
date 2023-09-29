@@ -12,8 +12,6 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 
-export let shake = ScreenShake();
-
 const info = document.querySelector(".info")
 
 let camera, scene, renderer, controls, collision, composer;
@@ -136,7 +134,6 @@ function logger(){
 function render() {
 	composer.render()
 	logger()
-    shake.update(camera)
 	//requestAnimFrame()
 
 	requestAnimationFrame( render );
