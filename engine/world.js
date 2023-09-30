@@ -164,7 +164,7 @@ export function init(scene, vertex, color){
 		console.error( error );
 
 	});
-	loader.load( './assets/models/myroomHitbox.glb', function ( gltf ) {
+	loader.load( './assets/models/myroomHitBox.glb', function ( gltf ) {
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 7;
 		gltf.scene.scale.y = 7;
