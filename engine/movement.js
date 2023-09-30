@@ -1,7 +1,6 @@
 import * as Collisons from './collisions.js'
 import * as THREE from 'three';
 import * as TWEEN from 'tween'
-import { shake } from './main.js';
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;

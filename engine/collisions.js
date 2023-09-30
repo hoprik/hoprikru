@@ -29,7 +29,7 @@ export class Collisons{
 
     collisonDetector(){
         this.raycast.ray.origin.copy( this.controll.getObject().position);
-		this.raycast.ray.origin.y -= 10;
+		//this.raycast.ray.origin.y -= 10;
 
 		const intersections = this.raycast.intersectObjects( World.objects, false );
 
@@ -37,7 +37,7 @@ export class Collisons{
 
 		this.raycast.ray.origin.copy(this.controll.getObject().position);
 
-		const rayDistance = 6;
+		const rayDistance = 4;
 
 		for (const direction of genRays(20)) {
 			this.raycast.ray.direction.copy(direction);
