@@ -148,7 +148,7 @@ export function init(scene, vertex, color){
 
 	const loader = new GLTFLoader();
 
-	loader.load( './assets/models/myroom.glb', function ( gltf ) {
+	loader.load( './assets/models/kitchen.glb', function ( gltf ) {
 		gltf.scene.position.y = 1.1
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 3;
@@ -164,7 +164,7 @@ export function init(scene, vertex, color){
 		console.error( error );
 
 	});
-	loader.load( './assets/models/myroomHitBox.glb', function ( gltf ) {
+	loader.load( './assets/models/kithcen-hibtoxmap.glb', function ( gltf ) {
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 3;
 		gltf.scene.scale.y = 5;
