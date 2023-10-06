@@ -164,7 +164,7 @@ export function init(scene, vertex, color){
 		console.error( error );
 
 	});
-	loader.load( './assets/models/kithcen-hibtoxmap.glb', function ( gltf ) {
+	loader.load( './assets/models/kithcen-hitboxmap.glb', function ( gltf ) {
 		gltf.scene.position.x = 50
 		gltf.scene.scale.x = 3;
 		gltf.scene.scale.y = 5;
