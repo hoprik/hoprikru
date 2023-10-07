@@ -3,6 +3,7 @@ import { Sky } from 'three/addons/objects/Sky.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export let objects = []
+export let interactionObject = []
 
 export function skyInit(scene){
     // Add Sky
@@ -45,6 +46,31 @@ export function skyInit(scene){
     // renderer.render( scene, camera );
 }
 
+function door(scene){
+
+	const boxGeometry = new THREE.BoxGeometry( 6, 12, 0.5 ).toNonIndexed();
+	const colorsBox = [];
+
+
+	boxGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsBox, 3 ) );
+
+	const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
+	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+
+	const box = new THREE.Mesh( boxGeometry, boxMaterial );
+	box.position.x = -20
+	box.position.y = 10
+	box.position.z = 45
+	box.castShadow = true;
+	box.receiveShadow = true;
+	console.log(box);
+
+	scene.add( box );
+	interactionObject.push( {object: box, fun:()=>{
+		console.log("test");
+	}} );
+}
+
 export function init(scene, vertex, color){
 
 	const HemisphereLight = new THREE.HemisphereLight( 0xeeeeff, 0x777788,0.4 );
@@ -66,6 +92,8 @@ export function init(scene, vertex, color){
 	light.shadow.camera.top = 500;
 	light.shadow.camera.right = -500;
 	light.shadow.camera.bottom = -500;
+	light.shadow.bias = -0.01;
+	
 
 	
     // var helper = new THREE.CameraHelper( light.shadow.camera );
@@ -110,9 +138,11 @@ export function init(scene, vertex, color){
 	const floor = new THREE.Mesh( floorGeometry, floorMaterial );
 	floor.castShadow = false;
 	floor.receiveShadow = true;
-	scene.add( floor );
+	// scene.add( floor );
 
 	// objects
+
+	door(scene)
 
 	const boxGeometry = new THREE.BoxGeometry( 20, 20, 20 ).toNonIndexed();
 
@@ -157,6 +187,8 @@ export function init(scene, vertex, color){
 		scene.add( gltf.scene );
 		gltf.scene.children[0].castShadow = true;
 		gltf.scene.children[0].receiveShadow = true;
+		gltf.scene.children[1].castShadow = true;
+		gltf.scene.children[1].receiveShadow = true;
 		//objects.push(gltf.scene.children[0])
 
 	}, undefined, function ( error ) {

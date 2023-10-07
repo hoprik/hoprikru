@@ -1,6 +1,4 @@
 import * as Collisons from './collisions.js'
-import * as THREE from 'three';
-import * as TWEEN from 'tween'
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -9,10 +7,8 @@ let canJump = false;
 let speed = 400.0;
 let prevTime = performance.now();
 let velocityM;
-let walkType = false;
 
 const onKeyDown = function ( event ) {
-
     switch ( event.code ) {
 
         case 'ArrowUp':

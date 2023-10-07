@@ -7,10 +7,9 @@ import { movement } from './main.js';
 function genRays(numRays){
 	const rayDirections = [];
 
-	// Генерация направлений лучей
 	for (let i = 0; i < numRays; i++) {
 		const angle = (i / numRays) * Math.PI * 2; 
-		const directionN = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle)); // Создание вектора направления
+		const directionN = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));
 		rayDirections.push(directionN); 
 	}
 	return rayDirections;
@@ -28,24 +27,15 @@ export class Collisons{
     }
 
     collisonDetector(){
-        this.raycast.ray.origin.copy( this.controll.getObject().position);
-		//this.raycast.ray.origin.y -= 10;
-
-		const intersections = this.raycast.intersectObjects( World.objects, false );
-
-		onObject = intersections.length > 0;
-
 		this.raycast.ray.origin.copy(this.controll.getObject().position);
 
 		const rayDistance = 4;
 
 		for (const direction of genRays(20)) {
 			this.raycast.ray.direction.copy(direction);
-		
-			// Здесь можно проводить проверку на столкновение для каждого луча
+
 			const intersections = this.raycast.intersectObjects(World.objects, true);
 		
-			// Обработка столкновений для текущего луча
 			if (intersections.length > 0 && intersections[0].distance < rayDistance) {
                 const collisionDirection = HoprikMath.getDirection(direction);
 				const cameraDirection = HoprikMath.getDirection(this.camera.getWorldDirection(new THREE.Vector3()))
