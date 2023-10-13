@@ -13,12 +13,12 @@ export function init(camera, raycaster, controll){
 
             raycaster.ray.direction.copy(camera.getWorldDirection(new THREE.Vector3()));
 
-            const intersections = raycaster.intersectObjects(World.interactionObject, true);
+            const intersections = raycaster.intersectObjects(World.interactionObject["object"], true);
 
             if (intersections.length > 0 && intersections[0].distance < rayDistance) {
                 World.interactionObject.forEach(element => {
                     console.log(intersections);
-                    if (intersections[0]["object"] == element["object"]){
+                    if (intersections[0] == element["object"]){
                         element["fun"]()
                     }
                 });
