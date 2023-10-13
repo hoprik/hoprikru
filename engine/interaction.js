@@ -9,7 +9,7 @@ export function init(camera, raycaster, controll){
         if (event.code == "KeyE" && !intercationButtonPress){
             raycaster.ray.origin.copy(controll.getObject().position);
 
-            const rayDistance = 100;
+            const rayDistance = 50;
 
             raycaster.ray.direction.copy(camera.getWorldDirection(new THREE.Vector3()));
 
