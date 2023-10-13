@@ -25,7 +25,7 @@ export function init(camera, raycaster, controll){
             if (intersections.length > 0 && intersections[0].distance < rayDistance) {
                 World.interactionObject.forEach(element => {
                     console.log(intersections);
-                    if (intersections[0] == element["object"]){
+                    if (intersections[0]["object"] == element["object"]){
                         element["fun"]()
                     }
                 });
