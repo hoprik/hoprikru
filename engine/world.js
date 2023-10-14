@@ -46,9 +46,9 @@ export function skyInit(scene){
     // renderer.render( scene, camera );
 }
 
-function door(scene){
+function door(scene, x, y, z){
 
-	const boxGeometry = new THREE.BoxGeometry( 6, 12, 0.5 ).toNonIndexed();
+	const boxGeometry = new THREE.BoxGeometry( 7.8, 14, 0.5 ).toNonIndexed();
 	const colorsBox = [];
 
 
@@ -58,20 +58,72 @@ function door(scene){
 	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
 
 	const box = new THREE.Mesh( boxGeometry, boxMaterial );
-	box.position.x = -20
-	box.position.y = 10
-	box.position.z = 45
+	box.position.x = x 
+	box.position.y = y 
+	box.position.z = z 
 	box.castShadow = true;
 	box.receiveShadow = true;
 	console.log(box);
 
+	let isOpen = false
 	scene.add( box );
 	interactionObject.push( {object: box, fun:(e)=>{
-		setInterval(() => {
-			e.rotation.y = e.rotation.y + 1.5 / 0.1
-			e.position.x = e.position.x + 2.5 / 0.1
-			e.position.z = e.position.z + 2.5 / 0.1
-		}, 0.1);
+		const inter = setInterval(() => {	
+			let rotate = 1.7
+			let position = 4
+			if (isOpen){
+				rotate =- rotate
+				position =- position
+			}
+			e.rotation.y = e.rotation.y + rotate * 0.1
+			e.position.x = e.position.x + position * 0.1
+			e.position.z = e.position.z + position * 0.1
+			if (e.rotation.y > 1.5 || e.rotation.y < 0){
+				if (e.rotation.y > 1.5 ) e.rotation.y = 1.5 
+				if (e.rotation.y < 0) e.rotation.y = 0 
+				clearInterval(inter)
+				isOpen = !isOpen
+			}
+		}, 10);
+	}});
+
+	objects.push(box)
+}
+
+function door2(scene, x, y, z){
+
+	const boxGeometry = new THREE.BoxGeometry( 7.8, 14, 0.3 ).toNonIndexed();
+	const colorsBox = [];
+
+
+	boxGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsBox, 3 ) );
+
+	const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
+	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+
+	const box = new THREE.Mesh( boxGeometry, boxMaterial );
+	box.position.x = x 
+	box.position.y = y 
+	box.position.z = z 
+	box.castShadow = true;
+	box.receiveShadow = true;
+	console.log(box);
+
+	const save = box.position.x
+	let isOpen = false
+	scene.add( box );
+	interactionObject.push( {object: box, fun:(e)=>{
+		const inter = setInterval(() => {	
+			let position = 7.8
+			if (isOpen){
+				position =- position
+			}
+			e.position.x += position * 0.1
+			if (e.position.x > save + 7.8 || e.position.x < save){
+				clearInterval(inter)
+				isOpen = !isOpen
+			}
+		}, 10);
 	}});
 
 	objects.push(box)
@@ -148,7 +200,9 @@ export function init(scene, vertex, color){
 
 	// objects
 
-	door(scene)
+	door(scene, 56, 8.5, -23)
+	door(scene, 55.7, 8.5, 12.5)
+	door2(scene, 27.7, 8.5, 12.2)
 
 	const boxGeometry = new THREE.BoxGeometry( 20, 20, 20 ).toNonIndexed();
 

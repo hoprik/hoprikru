@@ -18,11 +18,6 @@ const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 const color = new THREE.Color();
 
-
-
-init();
-render();
-
 document.addEventListener("keydown", (event)=>{
 	if (event.code == "F4" && !isDebugButtonPress){
 		isDebug = !isDebug
@@ -167,3 +162,5 @@ function render() {
 
 }   
 
+init();
+render();
