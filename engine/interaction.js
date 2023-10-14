@@ -26,7 +26,7 @@ export function init(camera, raycaster, controll){
                 World.interactionObject.forEach(element => {
                     console.log(intersections);
                     if (intersections[0]["object"] == element["object"]){
-                        element["fun"]()
+                        element["fun"](intersections[0]["object"])
                     }
                 });
             }

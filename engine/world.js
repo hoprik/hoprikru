@@ -66,9 +66,15 @@ function door(scene){
 	console.log(box);
 
 	scene.add( box );
-	interactionObject.push( {object: box, fun:()=>{
-		console.log("test");
-	}} );
+	interactionObject.push( {object: box, fun:(e)=>{
+		setInterval(() => {
+			e.rotation.y = e.rotation.y + 1.5 / 0.1
+			e.position.x = e.position.x + 2.5 / 0.1
+			e.position.z = e.position.z + 2.5 / 0.1
+		}, 0.1);
+	}});
+
+	objects.push(box)
 }
 
 export function init(scene, vertex, color){

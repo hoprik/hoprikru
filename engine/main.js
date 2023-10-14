@@ -51,6 +51,7 @@ function init() {
 	controls = new PointerLockControls( camera, document.body );
 	const blocker = document.getElementById( 'blocker' );
 	const instructions = document.getElementById( 'instructions' );
+	const pointer = document.querySelector( '.pointer' );
 
 	instructions.addEventListener( 'click', function () {
 
@@ -62,6 +63,7 @@ function init() {
 
 		instructions.style.display = 'none';
 		blocker.style.display = 'none';
+		pointer.style.display = 'flex'
 
 	} );
 
@@ -69,6 +71,7 @@ function init() {
 
 		blocker.style.display = 'block';
 		instructions.style.display = '';
+		pointer.style.display = 'none'
 
 	} );
 
