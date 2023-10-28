@@ -3,6 +3,7 @@ import { Sky } from 'three/addons/objects/Sky.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export let objects = []
+export let interactionObject = []
 
 export function skyInit(scene){
     // Add Sky
@@ -45,6 +46,89 @@ export function skyInit(scene){
     // renderer.render( scene, camera );
 }
 
+function door(scene, x, y, z){
+
+	const boxGeometry = new THREE.BoxGeometry( 7.8, 14, 0.5 ).toNonIndexed();
+	const colorsBox = [];
+
+
+	boxGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsBox, 3 ) );
+
+	const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
+	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+
+	const box = new THREE.Mesh( boxGeometry, boxMaterial );
+	box.position.x = x 
+	box.position.y = y 
+	box.position.z = z 
+	box.castShadow = true;
+	box.receiveShadow = true;
+	console.log(box);
+
+	let isOpen = false
+	scene.add( box );
+	interactionObject.push( {object: box, fun:(e)=>{
+		const inter = setInterval(() => {	
+			let rotate = 1.7
+			let position = 4
+			if (isOpen){
+				rotate =- rotate
+				position =- position
+			}
+			e.rotation.y = e.rotation.y + rotate * 0.1
+			e.position.x = e.position.x + position * 0.1
+			e.position.z = e.position.z + position * 0.1
+			if (e.rotation.y > 1.5 || e.rotation.y < 0){
+				if (e.rotation.y > 1.5 ) e.rotation.y = 1.5 
+				if (e.rotation.y < 0) e.rotation.y = 0 
+				clearInterval(inter)
+				isOpen = !isOpen
+			}
+		}, 10);
+	}});
+
+	objects.push(box)
+}
+
+function door2(scene, x, y, z){
+
+	const boxGeometry = new THREE.BoxGeometry( 7.8, 14, 0.3 ).toNonIndexed();
+	const colorsBox = [];
+
+
+	boxGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsBox, 3 ) );
+
+	const boxMaterial = new THREE.MeshPhongMaterial( { specular: 0xffffff, flatShading: true, vertexColors: true } );
+	boxMaterial.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace );
+
+	const box = new THREE.Mesh( boxGeometry, boxMaterial );
+	box.position.x = x 
+	box.position.y = y 
+	box.position.z = z 
+	box.castShadow = true;
+	box.receiveShadow = true;
+	console.log(box);
+
+	const save = box.position.x
+	let isOpen = false
+	scene.add( box );
+	interactionObject.push( {object: box, fun:(e)=>{
+		const inter = setInterval(() => {	
+			let position = 7.8
+			if (isOpen){
+				position =- position
+			}
+			e.position.x += position * 0.1
+			if (e.position.x > save + 7.8 || e.position.x < save){
+				clearInterval(inter)
+				isOpen = !isOpen
+			}
+		}, 10);
+	}});
+
+	objects.push(box)
+}
+
 export function init(scene, vertex, color){
 
 	const HemisphereLight = new THREE.HemisphereLight( 0xeeeeff, 0x777788,0.4 );
@@ -66,6 +150,8 @@ export function init(scene, vertex, color){
 	light.shadow.camera.top = 500;
 	light.shadow.camera.right = -500;
 	light.shadow.camera.bottom = -500;
+	light.shadow.bias = -0.01;
+	
 
 	
     // var helper = new THREE.CameraHelper( light.shadow.camera );
@@ -110,9 +196,13 @@ export function init(scene, vertex, color){
 	const floor = new THREE.Mesh( floorGeometry, floorMaterial );
 	floor.castShadow = false;
 	floor.receiveShadow = true;
-	scene.add( floor );
+	// scene.add( floor );
 
 	// objects
+
+	door(scene, 56, 8.5, -23)
+	door(scene, 55.7, 8.5, 12.5)
+	door2(scene, 27.7, 8.5, 12.2)
 
 	const boxGeometry = new THREE.BoxGeometry( 20, 20, 20 ).toNonIndexed();
 
@@ -148,17 +238,25 @@ export function init(scene, vertex, color){
 
 	const loader = new GLTFLoader();
 
-	loader.load( './assets/models/myroom.glb', function ( gltf ) {
+	loader.load( './assets/models/kitchen.glb', function ( gltf ) {
 		gltf.scene.position.y = 1.1
 		gltf.scene.position.x = 50
+<<<<<<< HEAD
 		gltf.scene.scale.x = 7;
 		gltf.scene.scale.y = 7;
 		gltf.scene.scale.z = 7;
 		gltf.scene.children[0].castShadow = true;
 		gltf.scene.children[0].receiveShadow = true;
+=======
+		gltf.scene.scale.x = 3;
+		gltf.scene.scale.y = 3;
+		gltf.scene.scale.z = 3;
+>>>>>>> e951f4e53aabcb88363c67e49d745fc8978f3128
 		scene.add( gltf.scene );
 		gltf.scene.children[0].castShadow = true;
 		gltf.scene.children[0].receiveShadow = true;
+		gltf.scene.children[1].castShadow = true;
+		gltf.scene.children[1].receiveShadow = true;
 		//objects.push(gltf.scene.children[0])
 
 	}, undefined, function ( error ) {
@@ -166,11 +264,11 @@ export function init(scene, vertex, color){
 		console.error( error );
 
 	});
-	loader.load( './assets/models/myroomHitbox.glb', function ( gltf ) {
+	loader.load( './assets/models/kithcen-hitboxmap.glb', function ( gltf ) {
 		gltf.scene.position.x = 50
-		gltf.scene.scale.x = 7;
-		gltf.scene.scale.y = 7;
-		gltf.scene.scale.z = 7;
+		gltf.scene.scale.x = 3;
+		gltf.scene.scale.y = 5;
+		gltf.scene.scale.z = 3;
 		gltf.scene.visible = false;
 		gltf.scene.castShadow = true;
 		gltf.scene.receiveShadow = true;
