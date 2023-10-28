@@ -8,10 +8,18 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import * as Settings from '../settings.js';
 let camera, scene, renderer, controls, collision, composer, stats, raycaster, debuggerElem, info;
 export let movement
 let isDebug = false
 let isDebugButtonPress = false;
+
+//cheats
+
+let noclip = true
+
+
+
 
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -21,17 +29,18 @@ const color = new THREE.Color();
 document.addEventListener("keydown", (event)=>{
 	if (event.code == "F4" && !isDebugButtonPress){
 		isDebug = !isDebug
-		if (isDebug){
-			create()
-		}
-		else{
-			remove()
-		}
+		isDebug ? create() : remove()
 		isDebugButtonPress = true;
+	}
+	if (event.code == "Backquote" & !isDebugButtonPress){
+		Settings.consoleOpen != !Settings.consoleOpen
 	}
 })
 document.addEventListener("keyup", (event)=>{
 	if (event.code == "F4"){
+		isDebugButtonPress = false;
+	}
+	if (event.code == "Backquote"){
 		isDebugButtonPress = false;
 	}
 })
@@ -146,16 +155,18 @@ function render() {
 	composer.render()
 
 	if (isDebug){
-	logger()
-	stats.begin();
-	stats.end();
+		logger()
+		stats.begin();
+		stats.end();
 	}
 
 	requestAnimationFrame( render );
 
 	if ( controls.isLocked === true ) {
-		collision.collisonDetector()
-		movement.move()
+		if (!noclip) collision.collisonDetector()
+		
+		if (!Settings.consoleOpen) movement.move()
+
 	}
 
 

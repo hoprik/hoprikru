@@ -3,7 +3,6 @@ import * as World from './world.js'
 import * as THREE from 'three'
 import { movement } from './main.js';
 
-
 function genRays(numRays){
 	const rayDirections = [];
 
@@ -11,6 +10,7 @@ function genRays(numRays){
 		const angle = (i / numRays) * Math.PI * 2; 
 		const directionN = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));
 		rayDirections.push(directionN); 
+	
 	}
 	return rayDirections;
 }

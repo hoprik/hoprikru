@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { Sky } from 'three/addons/objects/Sky.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 export let objects = []
@@ -7,12 +8,12 @@ export let interactionObject = []
 
 export function skyInit(scene){
     // Add Sky
-    let sky = new Sky();
-    sky.scale.setScalar( 450000 );
-    scene.add( sky );
-    console.log(sky);
-    sky.material.uniforms["sunPosition"].value.y = 50
-    sky.material.uniforms["sunPosition"].value.x = 50
+    // let sky = new Sky();
+    // sky.scale.setScalar( 450000 );
+    // scene.add( sky );
+    // console.log(sky);
+    // sky.material.uniforms["sunPosition"].value.y = 50
+    // sky.material.uniforms["sunPosition"].value.x = 50
 
     //sun = new THREE.Vector3();
 
@@ -48,7 +49,7 @@ export function skyInit(scene){
 
 function door(scene, x, y, z){
 
-	const boxGeometry = new THREE.BoxGeometry( 7.8, 14, 0.5 ).toNonIndexed();
+	const boxGeometry = new THREE.BoxGeometry( 9.3, 17, 0.5 ).toNonIndexed();
 	const colorsBox = [];
 
 
@@ -200,8 +201,8 @@ export function init(scene, vertex, color){
 
 	// objects
 
-	door(scene, 56, 8.5, -23)
-	door(scene, 55.7, 8.5, 12.5)
+	door(scene, 57, 8.5, -26.7)
+	door(scene, 57, 8.5, 14.5)
 	door2(scene, 27.7, 8.5, 12.2)
 
 	const boxGeometry = new THREE.BoxGeometry( 20, 20, 20 ).toNonIndexed();
@@ -237,38 +238,59 @@ export function init(scene, vertex, color){
 	// }
 
 	const loader = new GLTFLoader();
+	const obj = new OBJLoader();
 
+	// obj.load( './assets/models/kitchen.obj', function ( gltf ) {
+	// 	gltf.position.y = 1.1
+	// 	gltf.position.x = 50
+	// 	gltf.scale.x = 3;
+	// 	gltf.scale.y = 3;
+	// 	gltf.scale.z = 3;
+	// 	scene.add( gltf);
+	// 	// gltf.scene.children[0].castShadow = true;
+	// 	// gltf.scene.children[0].receiveShadow = true;
+	// 	// gltf.scene.children[1].castShadow = true;
+	// 	// gltf.scene.children[1].receiveShadow = true;
+	// 	//objects.push(gltf.scene.children[0])
+	// 	console.log(gltf);
+
+	// }, undefined, function ( error ) {
+
+	// 	console.error( error );
+
+	// });
 	loader.load( './assets/models/kitchen.glb', function ( gltf ) {
-		gltf.scene.position.y = 1.1
+		console.log(gltf);
 		gltf.scene.position.x = 50
-<<<<<<< HEAD
-		gltf.scene.scale.x = 7;
-		gltf.scene.scale.y = 7;
-		gltf.scene.scale.z = 7;
-		gltf.scene.children[0].castShadow = true;
-		gltf.scene.children[0].receiveShadow = true;
-=======
-		gltf.scene.scale.x = 3;
-		gltf.scene.scale.y = 3;
-		gltf.scene.scale.z = 3;
->>>>>>> e951f4e53aabcb88363c67e49d745fc8978f3128
-		scene.add( gltf.scene );
-		gltf.scene.children[0].castShadow = true;
-		gltf.scene.children[0].receiveShadow = true;
-		gltf.scene.children[1].castShadow = true;
-		gltf.scene.children[1].receiveShadow = true;
-		//objects.push(gltf.scene.children[0])
+		gltf.scene.scale.x = 3.5;
+		gltf.scene.scale.y = 3.5;
+		gltf.scene.scale.z = 3.5;
+		scene.add( gltf.scene );	
+		gltf.scene.children.forEach(element => {
+			if (element.name == "light"){
+				const light = new THREE.PointLight( 0xFFFFFF, 1000, 100);
+				light.position.set(gltf.scene.position.x+element.position.x, element.position.y,  element.position.z);
+				scene.add( light );
+			}
+			else{
+				element.castShadow = true;
+				element.receiveShadow = true;
+			}
+
+		});
 
 	}, undefined, function ( error ) {
 
 		console.error( error );
 
 	});
+
+
 	loader.load( './assets/models/kithcen-hitboxmap.glb', function ( gltf ) {
 		gltf.scene.position.x = 50
-		gltf.scene.scale.x = 3;
+		gltf.scene.scale.x = 3.5;
 		gltf.scene.scale.y = 5;
-		gltf.scene.scale.z = 3;
+		gltf.scene.scale.z = 3.5;
 		gltf.scene.visible = false;
 		gltf.scene.castShadow = true;
 		gltf.scene.receiveShadow = true;
