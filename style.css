@@ -47,8 +47,22 @@
 .info{
     position: absolute;
     top: 0;
+    background-color: white;
 }
 
 .console{
     position: absolute;
+    width: 99vw;
+    top: 0;
+}
+
+canvas{
+    top: 0;
+}
+
+.debuggerElem{
+    width: 50%;
+    height: 50px;
+    position: absolute;
+    top: 0;
 }

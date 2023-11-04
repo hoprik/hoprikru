@@ -8,18 +8,59 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import * as Settings from '../settings.js';
-let camera, scene, renderer, controls, collision, composer, stats, raycaster, debuggerElem, info;
+let camera, scene, renderer, controls, collision, composer, stats, raycaster, debuggerElem, info, consoleB;
 export let movement
-let isDebug = false
-let isDebugButtonPress = false;
-
+let isDebug, isDebugButtonPress = false
 //cheats
 
 let noclip = false
 
 
 
+export let isConsole = false
+
+let banListCode = [
+	"Enter" ,
+	"F1",
+	"F2",
+	"F3",
+	"F4",
+	"F5",
+	"F6",
+	"F7",
+	"F8",
+	"F9",
+	"F10",
+	"F11",
+	"F12",
+	"Backspace",
+	"ArrowRight",
+	"ArrowLeft",
+	"ArrowDown",
+	"ArrowUp",
+	"Control"
+
+];
+
+let banListKey = [
+	"Alt",
+	"Shift",
+	"Home",
+	"Enter",
+	"Control"
+]
+
+let commands = {
+	"noclip": ()=>{
+		noclip = !noclip;
+	},
+	"setWalkSpeed": (speed) =>{
+		Movement.speedWalk = speed;
+	},
+	"setRunSpeed": (run) =>{
+		Movement.speedRun = run;
+	}
+}
 
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
@@ -27,22 +68,35 @@ const vertex = new THREE.Vector3();
 const color = new THREE.Color();
 
 document.addEventListener("keydown", (event)=>{
-	if (event.code == "F4" && !isDebugButtonPress){
+	if (event.code == "F4" && !isDebugButtonPress && !isConsole){
 		isDebug = !isDebug
 		isDebug ? create() : remove()
 		isDebugButtonPress = true;
 	}
 	if (event.code == "Backquote" & !isDebugButtonPress){
-		Settings.consoleOpen != !Settings.consoleOpen
+		isConsole = !isConsole
+		isConsole ? consoleOpen() : consoleClose() 
+		isDebugButtonPress = true;
 	}
 })
+
+
+document.addEventListener("keydown", (event)=>{
+	console.log(!banListCode.includes(event.code));
+	if (!isDebugButtonPress && isConsole && !banListCode.includes(event.code) && !banListKey.includes(event.key)){
+		consoleB.value += event.key
+	}
+	if (event.code == "Backspace"){
+		consoleB.value = consoleB.value.slice(0, -1)
+	}
+	if (event.code == "Enter"){ 	
+		commands[consoleB.value.split(" ")[0]](...consoleB.value.split(" ").slice(1, -1))
+		consoleB.value = ""
+	}
+})
+
 document.addEventListener("keyup", (event)=>{
-	if (event.code == "F4"){
-		isDebugButtonPress = false;
-	}
-	if (event.code == "Backquote"){
-		isDebugButtonPress = false;
-	}
+	isDebugButtonPress = false;
 })
 
 function init() {
@@ -89,7 +143,7 @@ function init() {
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = 3;
-	document.body.appendChild( renderer.domElement );
+	document.body.appendChild( renderer.domElement);
 
 	raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10);
 	collision = new Collision.Collisons(controls, raycaster, camera);
@@ -112,6 +166,24 @@ function init() {
 	window.addEventListener( 'resize', onWindowResize );
 }
 
+function consoleOpen(){
+	consoleB = document.createElement("input")
+	consoleB.type = "text"
+	consoleB.className = "console"
+	document.body.appendChild(consoleB)
+	if (isDebug){
+		debuggerElem.style.top = "25px"
+	}
+}
+
+function consoleClose(){
+	consoleB.remove()
+	if (isDebug){
+		debuggerElem.style.top = "0px"
+	}
+}
+
+
 
 
 function onWindowResize() {
@@ -127,7 +199,7 @@ function create(){
 	info = document.createElement("p");
 	info.innerText = "info: "
 	info.className = "info"
-	
+	debuggerElem.className = "debuggerElem"
 	debuggerElem.appendChild(info)
 	stats = new Stats();
 	stats.showPanel( 0 ); 
@@ -135,19 +207,16 @@ function create(){
 	stats.dom.style.top = "25px"
 	debuggerElem.appendChild( stats.dom );
 	document.body.appendChild(debuggerElem);
-	isDebug = true;
 	
 }
 
 function remove(){
 	debuggerElem.remove()
-	isDebug = false;
 }
 
 function logger(){
 	info.innerHTML = "xyz "+Math.round(controls.getObject().position.x)+" "+Math.round(controls.getObject().position.y)+" "+Math.round(controls.getObject().position.z)+" direction "+HoprikMath.getDirection(camera.getWorldDirection(new THREE.Vector3())).name+" fps "
 }
-
 
 
 
@@ -165,7 +234,7 @@ function render() {
 	if ( controls.isLocked === true ) {
 		if (!noclip) collision.collisonDetector()
 		
-		if (!Settings.consoleOpen) movement.move()
+		if (!isConsole) movement.move()
 
 	}
 

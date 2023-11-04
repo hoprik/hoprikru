@@ -1,75 +1,80 @@
 import * as Collisons from './collisions.js'
+import * as Main from './main.js'
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
 let canJump = false;
 let speed = 400.0;
+export let speedRun = 600.0;
+export let speedWalk = 400.0
 let prevTime = performance.now();
 let velocityM;
+let controlsM;
 
 const onKeyDown = function ( event ) {
-    switch ( event.code ) {
+    if (controlsM.isLocked){
+        switch ( event.code ) {
 
-        case 'ArrowUp':
-        case 'KeyW':
-            moveForward = true;
-            break;
+            case 'ArrowUp':
+            case 'KeyW':
+                moveForward = true;
+                break;
 
-        case 'ArrowLeft':
-        case 'KeyA':
-            moveLeft = true;
-            break;
+            case 'ArrowLeft':
+            case 'KeyA':
+                moveLeft = true;
+                break;
 
-        case 'ArrowDown':
-        case 'KeyS':
-            moveBackward = true;
-            break;
+            case 'ArrowDown':
+            case 'KeyS':
+                moveBackward = true;
+                break;
 
-        case 'ArrowRight':
-        case 'KeyD':
-            moveRight = true;
-            break;
+            case 'ArrowRight':
+            case 'KeyD':
+                moveRight = true;
+                break;
 
-        case 'Space':
-            if ( canJump === true ) velocityM.y += 50;
-            canJump = false;
-            break;
-        case 'ShiftLeft':
-            speed = 600.0;
-            break;
-
+            case 'Space':
+                if ( canJump === true ) velocityM.y += 50;
+                canJump = false;
+                break;
+            case 'ShiftLeft':
+                speed = speedRun;
+                break;
+        }
     }
 
 };
 
 const onKeyUp = function ( event ) {
+    if (controlsM.isLocked){
+        switch ( event.code ) {
 
-    switch ( event.code ) {
+            case 'ArrowUp':
+            case 'KeyW':
+                moveForward = false;
+                break;
 
-        case 'ArrowUp':
-        case 'KeyW':
-            moveForward = false;
-            break;
+            case 'ArrowLeft':
+            case 'KeyA':
+                moveLeft = false;
+                break;
 
-        case 'ArrowLeft':
-        case 'KeyA':
-            moveLeft = false;
-            break;
+            case 'ArrowDown':
+            case 'KeyS':
+                moveBackward = false;
+                break;
 
-        case 'ArrowDown':
-        case 'KeyS':
-            moveBackward = false;
-            break;
-
-        case 'ArrowRight':
-        case 'KeyD':
-            moveRight = false;
-            break;
-        case 'ShiftLeft':
-            speed = 400
+            case 'ArrowRight':
+            case 'KeyD':
+                moveRight = false;
+                break;
+            case 'ShiftLeft':
+                speed = speedWalk
+        }
     }
-
 };
 
 
@@ -81,6 +86,7 @@ export class Movement{
         this.direction = direction;
         this.controls = controls;
         this.camera = camera;
+        controlsM = controls;
         document.addEventListener( 'keydown', onKeyDown );
         document.addEventListener( 'keyup', onKeyUp );
     }
