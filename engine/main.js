@@ -13,7 +13,7 @@ export let movement
 let isDebug, isDebugButtonPress = false
 //cheats
 
-let noclip = false
+let noclip = true
 
 
 
@@ -55,11 +55,18 @@ let commands = {
 		noclip = !noclip;
 	},
 	"setWalkSpeed": (speed) =>{
-		Movement.speedWalk = speed;
+		movement.setWalkSpeed(speed);
 	},
 	"setRunSpeed": (run) =>{
-		Movement.speedRun = run;
+		movement.setRunSpeed(run);
+	},
+	"tp": (x,y,z)=>{
+		controls.getObject().position.x = x;
+		controls.getObject().position.y = y;
+		controls.getObject().position.z = z;
+
 	}
+
 }
 
 const velocity = new THREE.Vector3();
@@ -90,7 +97,10 @@ document.addEventListener("keydown", (event)=>{
 		consoleB.value = consoleB.value.slice(0, -1)
 	}
 	if (event.code == "Enter"){ 	
-		commands[consoleB.value.split(" ")[0]](...consoleB.value.split(" ").slice(1, -1))
+		const args = consoleB.value.split(" ")
+		args.shift()
+		console.log(...args);
+		commands[consoleB.value.split(" ")[0]](...args)
 		consoleB.value = ""
 	}
 })
@@ -144,7 +154,6 @@ function init() {
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = 3;
 	document.body.appendChild( renderer.domElement);
-
 	raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10);
 	collision = new Collision.Collisons(controls, raycaster, camera);
 	movement = new Movement.Movement(document, velocity, direction, controls, camera)

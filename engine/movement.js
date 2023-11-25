@@ -6,8 +6,8 @@ let moveLeft = false;
 let moveRight = false;
 let canJump = false;
 let speed = 400.0;
-export let speedRun = 600.0;
-export let speedWalk = 400.0
+let speedRun = 600.0;
+let speedWalk = 400.0
 let prevTime = performance.now();
 let velocityM;
 let controlsM;
@@ -73,6 +73,7 @@ const onKeyUp = function ( event ) {
                 break;
             case 'ShiftLeft':
                 speed = speedWalk
+                break;
         }
     }
 };
@@ -143,6 +144,7 @@ export class Movement{
 		}
         prevTime = time;
 	}
+
     block(id){
         if (id == 1){
             moveForward = false;
@@ -161,4 +163,15 @@ export class Movement{
     isDontMove(){
         if (!moveForward) if (!moveRight) if (!moveBackward) if (!moveLeft) return false;
     }
+
+    setWalkSpeed(walk){
+        speedWalk = walk;
+        speed = walk
+    }
+
+    setRunSpeed(run){
+        speedRun = run;
+    }
+
+
 }
