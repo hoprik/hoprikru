@@ -13,7 +13,7 @@ export let movement
 let isDebug, isDebugButtonPress = false
 //cheats
 
-let noclip = true
+let noclip = false
 
 
 
